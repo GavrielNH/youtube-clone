@@ -72,7 +72,7 @@ export async function uploadProcessedVideo(fileName: string) {
   console.log(`${localProcessedVideoPath}/${fileName} has been uploaded to gs://${processedVideoBucketName}/${fileName}`);
 
   // Private by default, so make it public
-  await bucket.file(fileName).makePublic;
+  await bucket.file(fileName).makePublic();
 }
 
 

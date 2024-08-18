@@ -1,29 +1,39 @@
 import * as functions from "firebase-functions";
-// import * as logger from "firebase-functions/logger";
-// import {initializeApp} from "firebase-admin/app";
-// import {Firestore} from "firebase-admin/firestore";
+import * as logger from "firebase-functions/logger";
+import {initializeApp} from "firebase-admin/app";
+import {Firestore} from "firebase-admin/firestore";
 import {Storage} from "@google-cloud/storage";
 import {onCall} from "firebase-functions/v2/https";
 
-// initializeApp();
+initializeApp();
 
-// const firestore = new Firestore();
+const firestore = new Firestore();
 const storage = new Storage();
-
 const rawVideoBucketName = "gnh-yt-raw-videos";
 
-// export const createUser = functions.auth.user().onCreate((user) => {
-//   const userInfo = {
-//     uid: user.uid,
-//     email: user.email,
-//     photoUrl: user.photoURL,
-//   };
+const videoCollectionId = "videos";
 
-//   firestore.collection("users").doc(user.uid).set(userInfo);
-//   logger.info(`User Created: ${JSON.stringify(userInfo)}`);
+export interface Video {
+  id?: string,
+  uid?: string,
+  filename?: string,
+  status?: "processing" | "processed",
+  title?: string,
+  description?: string
+}
 
-//   return;
-// });
+export const createUser = functions.auth.user().onCreate((user) => {
+  const userInfo = {
+    uid: user.uid,
+    email: user.email,
+    photoUrl: user.photoURL,
+  };
+
+  firestore.collection("users").doc(user.uid).set(userInfo);
+  logger.info(`User Created: ${JSON.stringify(userInfo)}`);
+
+  return;
+});
 
 
 export const generateUploadUrl =
@@ -48,4 +58,11 @@ onCall({maxInstances: 1}, async (request) => {
   });
 
   return {url, fileName};
+});
+
+
+export const getVideo = onCall({maxInstances: 1}, async () => {
+  const snapshot =
+    await firestore.collection(videoCollectionId).limit(10).get();
+  return snapshot.docs.map((doc) => doc.data());
 });
