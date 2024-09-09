@@ -3,10 +3,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, User } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
 
+require('dotenv').config();
+const apiKey = process.env.GOOGLE_API_KEY;
+
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyB0XN8vlZMhVIZnUm2KM7grF8NqRRIMqOY",
+  apiKey: apiKey,
   authDomain: "gnh-yt-clone.firebaseapp.com",
   projectId: "gnh-yt-clone",
   appId: "1:261269908018:web:524962a3aec56a19af2a2b",
